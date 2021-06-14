@@ -27,6 +27,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/kelseyhightower/envconfig"
 	"go.opencensus.io/plugin/ochttp"
 	"go.uber.org/automaxprocs/maxprocs"
@@ -34,6 +36,9 @@ import (
 
 	"k8s.io/apimachinery/pkg/types"
 
+	"github.com/ease-lab/xdt/dQP"
+	"github.com/ease-lab/xdt/sQP"
+	XDTUtils "github.com/ease-lab/xdt/utils"
 	network "knative.dev/networking/pkg"
 	pkglogging "knative.dev/pkg/logging"
 	"knative.dev/pkg/logging/logkey"
@@ -110,6 +115,16 @@ func init() {
 }
 
 func main() {
+
+	logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetFormatter(&logrus.TextFormatter{TimestampFormat: "2006-01-02 15:04:05.000000", FullTimestamp: true, ForceColors: true})
+
+	// start sQP and dQP servers
+	XDTconfig := XDTUtils.LoadConfig
+
+	go sQP.StartServer(XDTconfig)
+	go dQP.StartServer(XDTconfig)
+
 	flag.Parse()
 
 	// If this is set, we run as a standalone binary to probe the queue-proxy.

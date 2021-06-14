@@ -2,6 +2,15 @@ module knative.dev/serving
 
 go 1.15
 
+replace (
+	github.com/ease-lab/xdt/proto/crossXDT => github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210611064537-03abf66d26e3
+	github.com/ease-lab/xdt/proto/downXDT => github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210611064537-03abf66d26e3
+	github.com/ease-lab/xdt/proto/fnInvocation => github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210611064537-03abf66d26e3
+	github.com/ease-lab/xdt/proto/upXDT => github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210611064537-03abf66d26e3
+	github.com/ease-lab/xdt/transport => github.com/ease-lab/xdt/transport v0.0.0-20210611064537-03abf66d26e3
+	github.com/ease-lab/xdt/utils => github.com/ease-lab/xdt/utils v0.0.0-20210611064537-03abf66d26e3
+)
+
 require (
 	github.com/Azure/azure-sdk-for-go v50.2.0+incompatible // indirect
 	github.com/Azure/go-autorest/autorest v0.11.17 // indirect
@@ -13,6 +22,14 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/cli v20.10.2+incompatible // indirect
 	github.com/docker/docker v20.10.2+incompatible // indirect
+	github.com/ease-lab/xdt/dQP v0.0.0-20210611064537-03abf66d26e3
+	github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210610121407-b4ee8e33567c // indirect
+	github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210610121407-b4ee8e33567c // indirect
+	github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210610121407-b4ee8e33567c // indirect
+	github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210610121407-b4ee8e33567c // indirect
+	github.com/ease-lab/xdt/sQP v0.0.0-20210611064537-03abf66d26e3
+	github.com/ease-lab/xdt/transport v0.0.0-20210610121407-b4ee8e33567c // indirect
+	github.com/ease-lab/xdt/utils v0.0.0-20210610121407-b4ee8e33567c
 	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
 	github.com/go-openapi/spec v0.20.2 // indirect
 	github.com/gogo/protobuf v1.3.2
@@ -27,22 +44,23 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/prometheus/client_golang v1.10.0
 	github.com/prometheus/client_model v0.2.0
-	github.com/sirupsen/logrus v1.7.0 // indirect
+	github.com/sirupsen/logrus v1.8.1
 	github.com/tsenart/vegeta/v12 v12.8.4
 	go.opencensus.io v0.23.0
 	go.uber.org/atomic v1.7.0
 	go.uber.org/automaxprocs v1.4.0
 	go.uber.org/goleak v1.1.10
 	go.uber.org/zap v1.16.0
-	golang.org/x/mod v0.4.1 // indirect
-	golang.org/x/net v0.0.0-20210415231046-e915ea6b2b7d
+	golang.org/x/net v0.0.0-20210610132358-84b48f89b13b
 	golang.org/x/oauth2 v0.0.0-20210413134643-5e61552d6c78
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/sys v0.0.0-20210611083646-a4fc73990273 // indirect
 	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf // indirect
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
 	gonum.org/v1/netlib v0.0.0-20190331212654-76723241ea4e // indirect
 	google.golang.org/api v0.36.0
-	google.golang.org/grpc v1.37.0
+	google.golang.org/genproto v0.0.0-20210611144927-798beca9d670 // indirect
+	google.golang.org/grpc v1.38.0
 	k8s.io/api v0.19.7
 	k8s.io/apimachinery v0.19.7
 	k8s.io/client-go v0.19.7
