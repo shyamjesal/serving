@@ -123,6 +123,16 @@ jobs:
         uses: andstor/file-existence-action@v1
         with:
           files: .golangci.yaml
+
+      - name: Setup GOPRIVATE env
+        env:
+          GOPRIVATE_KEY: ${{ secrets.EASE_LAB_XDT_ACCESS_KEY }}
+        run: |
+          go env -w GOPRIVATE=github.com/ease-lab/xdt
+          git config --global url."https://ease-lab:$GOPRIVATE_KEY@github.com/ease-lab/XDT".insteadOf "https://github.com/ease-lab/xdt"
+          go mod vendor
+          go mod tidy
+
       - name: Go Lint
         if: steps.golangci_configuration.outputs.files_exists == 'true'
         uses: golangci/golangci-lint-action@v2

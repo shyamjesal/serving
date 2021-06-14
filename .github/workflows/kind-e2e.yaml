@@ -84,6 +84,16 @@ jobs:
       with:
         path: ./src/knative.dev/serving
 
+    - name: Setup GOPRIVATE env
+      env:
+        GOPRIVATE_KEY: ${{ secrets.EASE_LAB_XDT_ACCESS_KEY }}
+      working-directory: ./src/knative.dev/serving
+      run: |
+        go env -w GOPRIVATE=github.com/ease-lab/xdt
+        git config --global url."https://ease-lab:$GOPRIVATE_KEY@github.com/ease-lab/XDT".insteadOf "https://github.com/ease-lab/xdt"
+        go mod vendor
+        go mod tidy
+
     - name: Install KinD
       run: |
         set -x
