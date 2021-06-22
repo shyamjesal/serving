@@ -116,20 +116,6 @@ func init() {
 
 func main() {
 
-	logrus.SetLevel(logrus.InfoLevel)
-	// TimestampFormat RFC3339NanoFixed is time.RFC3339Nano with nanoseconds padded using zeros to
-	// ensure the formatted time is always the same number of characters.
-	logrus.SetFormatter(&logrus.TextFormatter{
-		TimestampFormat: "2006-01-02T15:04:05.000000000Z07:00",
-		FullTimestamp:   true,
-		ForceColors:     true})
-
-	// start sQP and dQP servers
-	XDTconfig := XDTUtils.LoadConfig
-
-	go sQP.StartServer(XDTconfig)
-	go dQP.StartServer(XDTconfig)
-
 	flag.Parse()
 
 	// If this is set, we run as a standalone binary to probe the queue-proxy.
@@ -244,6 +230,19 @@ func main() {
 			errCh <- fmt.Errorf("serving failed on unix socket: %w", err)
 		}
 	}()
+
+	logrus.SetLevel(logrus.InfoLevel)
+	// TimestampFormat RFC3339NanoFixed is time.RFC3339Nano with nanoseconds padded using zeros to
+	// ensure the formatted time is always the same number of characters.
+	logrus.SetFormatter(&logrus.TextFormatter{
+		TimestampFormat: "2006-01-02T15:04:05.000000000Z07:00",
+		FullTimestamp:   true,
+		ForceColors:     true})
+
+	// start sQP and dQP servers
+	XDTconfig := XDTUtils.LoadConfig
+	go sQP.StartServer(XDTconfig)
+	go dQP.StartServer(XDTconfig)
 
 	// Blocks until we actually receive a TERM signal or one of the servers
 	// exits unexpectedly. We fold both signals together because we only want
