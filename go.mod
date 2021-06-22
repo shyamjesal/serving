@@ -3,12 +3,12 @@ module knative.dev/serving
 go 1.15
 
 replace (
-	github.com/ease-lab/xdt/proto/crossXDT => github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210616110742-958170ab3fa2
-	github.com/ease-lab/xdt/proto/downXDT => github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210616110742-958170ab3fa2
-	github.com/ease-lab/xdt/proto/fnInvocation => github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210616110742-958170ab3fa2
-	github.com/ease-lab/xdt/proto/upXDT => github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210616110742-958170ab3fa2
-	github.com/ease-lab/xdt/transport => github.com/ease-lab/xdt/transport v0.0.0-20210616110742-958170ab3fa2
-	github.com/ease-lab/xdt/utils => github.com/ease-lab/xdt/utils v0.0.0-20210616110742-958170ab3fa2
+	github.com/ease-lab/xdt/proto/crossXDT => github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/proto/downXDT => github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/proto/fnInvocation => github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/proto/upXDT => github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/transport => github.com/ease-lab/xdt/transport v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/utils => github.com/ease-lab/xdt/utils v0.0.0-20210618180444-d75f865316d6
 )
 
 require (
@@ -22,14 +22,9 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/cli v20.10.2+incompatible // indirect
 	github.com/docker/docker v20.10.2+incompatible // indirect
-	github.com/ease-lab/xdt/dQP v0.0.0-20210616110742-958170ab3fa2
-	github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210610121407-b4ee8e33567c // indirect
-	github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210610121407-b4ee8e33567c // indirect
-	github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210610121407-b4ee8e33567c // indirect
-	github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210610121407-b4ee8e33567c // indirect
-	github.com/ease-lab/xdt/sQP v0.0.0-20210616110742-958170ab3fa2
-	github.com/ease-lab/xdt/transport v0.0.0-20210610121407-b4ee8e33567c // indirect
-	github.com/ease-lab/xdt/utils v0.0.0-20210610121407-b4ee8e33567c
+	github.com/ease-lab/xdt/dQP v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/sQP v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/utils v0.0.0-00010101000000-000000000000
 	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
 	github.com/go-openapi/spec v0.20.2 // indirect
 	github.com/gogo/protobuf v1.3.2

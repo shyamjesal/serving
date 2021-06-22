@@ -117,7 +117,12 @@ func init() {
 func main() {
 
 	logrus.SetLevel(logrus.InfoLevel)
-	logrus.SetFormatter(&logrus.TextFormatter{TimestampFormat: "2006-01-02 15:04:05.000000", FullTimestamp: true, ForceColors: true})
+	// TimestampFormat RFC3339NanoFixed is time.RFC3339Nano with nanoseconds padded using zeros to
+	// ensure the formatted time is always the same number of characters.
+	logrus.SetFormatter(&logrus.TextFormatter{
+		TimestampFormat: "2006-01-02T15:04:05.000000000Z07:00",
+		FullTimestamp:   true,
+		ForceColors:     true})
 
 	// start sQP and dQP servers
 	XDTconfig := XDTUtils.LoadConfig
