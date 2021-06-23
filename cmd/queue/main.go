@@ -27,6 +27,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/prometheus/common/log"
+
 	"github.com/sirupsen/logrus"
 
 	"github.com/kelseyhightower/envconfig"
@@ -115,7 +117,6 @@ func init() {
 }
 
 func main() {
-
 	flag.Parse()
 
 	// If this is set, we run as a standalone binary to probe the queue-proxy.
@@ -180,7 +181,8 @@ func main() {
 	probe := buildProbe(logger, env)
 	healthState := health.NewState()
 
-	mainServer := buildServer(ctx, env, healthState, probe, stats, logger)
+	XDTconfig := XDTUtils.LoadConfig
+	mainServer := buildServer(ctx, env, healthState, probe, stats, logger, XDTconfig)
 	servers := map[string]*http.Server{
 		"main":    mainServer,
 		"admin":   buildAdminServer(logger, healthState),
@@ -240,7 +242,6 @@ func main() {
 		ForceColors:     true})
 
 	// start sQP and dQP servers
-	XDTconfig := XDTUtils.LoadConfig
 	go sQP.StartServer(XDTconfig)
 	go dQP.StartServer(XDTconfig)
 
@@ -291,7 +292,7 @@ func buildProbe(logger *zap.SugaredLogger, env config) *readiness.Probe {
 }
 
 func buildServer(ctx context.Context, env config, healthState *health.State, rp *readiness.Probe, stats *network.RequestStats,
-	logger *zap.SugaredLogger) *http.Server {
+	logger *zap.SugaredLogger, XDTconfig XDTUtils.Config) *http.Server {
 
 	maxIdleConns := 1000 // TODO: somewhat arbitrary value for CC=0, needs experimental validation.
 	if env.ContainerConcurrency > 0 {
@@ -314,6 +315,22 @@ func buildServer(ctx context.Context, env config, healthState *health.State, rp 
 	// Create queue handler chain.
 	// Note: innermost handlers are specified first, ie. the last handler in the chain will be executed first.
 	var composedHandler http.Handler = httpProxy
+	composedHandler = func(h http.Handler, logger *zap.SugaredLogger) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer h.ServeHTTP(w, r)
+
+			if r.Header.Get("is_xdt") == "true" {
+				log.Infof("pulling from sQP using key %s addr %s", r.Header.Get("key"), r.Header.Get("sqp_addr"))
+				go func() {
+					err := dQP.PullDataFromSrcQP(r.Context(), r.Header.Get("key"), r.Header.Get("sqp_addr"), XDTconfig.ChunkSizeInBytes)
+					if err != nil {
+						logger.Errorf("unable to pull data from SQP: %v", err)
+					}
+				}()
+			}
+
+		})
+	}(composedHandler, logger)
 	if metricsSupported {
 		composedHandler = requestAppMetricsHandler(logger, composedHandler, breaker, env)
 	}

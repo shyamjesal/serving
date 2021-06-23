@@ -3,12 +3,14 @@ module knative.dev/serving
 go 1.15
 
 replace (
-	github.com/ease-lab/xdt/proto/crossXDT => github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210618180444-d75f865316d6
-	github.com/ease-lab/xdt/proto/downXDT => github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210618180444-d75f865316d6
-	github.com/ease-lab/xdt/proto/fnInvocation => github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210618180444-d75f865316d6
-	github.com/ease-lab/xdt/proto/upXDT => github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210618180444-d75f865316d6
-	github.com/ease-lab/xdt/transport => github.com/ease-lab/xdt/transport v0.0.0-20210618180444-d75f865316d6
-	github.com/ease-lab/xdt/utils => github.com/ease-lab/xdt/utils v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/dQP => github.com/ease-lab/xdt/dQP v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/xdt/proto/crossXDT => github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/xdt/proto/downXDT => github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/xdt/proto/fnInvocation => github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/xdt/proto/upXDT => github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/xdt/sQP => github.com/ease-lab/xdt/sQP v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/xdt/transport => github.com/ease-lab/xdt/transport v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/xdt/utils => github.com/ease-lab/xdt/utils v0.0.0-20210626072757-1a825541e8a8
 )
 
 require (
@@ -22,13 +24,13 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/cli v20.10.2+incompatible // indirect
 	github.com/docker/docker v20.10.2+incompatible // indirect
-	github.com/ease-lab/xdt/dQP v0.0.0-20210618180444-d75f865316d6
-	github.com/ease-lab/xdt/sQP v0.0.0-20210618180444-d75f865316d6
+	github.com/ease-lab/xdt/dQP v0.0.0-00010101000000-000000000000
+	github.com/ease-lab/xdt/sQP v0.0.0-00010101000000-000000000000
 	github.com/ease-lab/xdt/utils v0.0.0-00010101000000-000000000000
 	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
 	github.com/go-openapi/spec v0.20.2 // indirect
 	github.com/gogo/protobuf v1.3.2
-	github.com/google/go-cmp v0.5.5
+	github.com/google/go-cmp v0.5.6
 	github.com/google/go-containerregistry v0.5.0
 	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20210430144454-9cf3ed4ac182
 	github.com/google/gofuzz v1.2.0
@@ -42,20 +44,22 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/tsenart/vegeta/v12 v12.8.4
 	go.opencensus.io v0.23.0
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.21.0 // indirect
 	go.uber.org/atomic v1.7.0
 	go.uber.org/automaxprocs v1.4.0
 	go.uber.org/goleak v1.1.10
 	go.uber.org/zap v1.16.0
-	golang.org/x/net v0.0.0-20210610132358-84b48f89b13b
+	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
 	golang.org/x/oauth2 v0.0.0-20210413134643-5e61552d6c78
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20210611083646-a4fc73990273 // indirect
+	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
 	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf // indirect
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
 	gonum.org/v1/netlib v0.0.0-20190331212654-76723241ea4e // indirect
 	google.golang.org/api v0.36.0
-	google.golang.org/genproto v0.0.0-20210611144927-798beca9d670 // indirect
+	google.golang.org/genproto v0.0.0-20210624195500-8bfb893ecb84 // indirect
 	google.golang.org/grpc v1.38.0
+	google.golang.org/protobuf v1.27.0 // indirect
 	k8s.io/api v0.19.7
 	k8s.io/apimachinery v0.19.7
 	k8s.io/client-go v0.19.7
