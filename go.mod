@@ -3,14 +3,13 @@ module knative.dev/serving
 go 1.15
 
 replace (
-	github.com/ease-lab/xdt/dQP => github.com/ease-lab/xdt/dQP v0.0.0-20210626072757-1a825541e8a8
-	github.com/ease-lab/xdt/proto/crossXDT => github.com/ease-lab/xdt/proto/crossXDT v0.0.0-20210626072757-1a825541e8a8
-	github.com/ease-lab/xdt/proto/downXDT => github.com/ease-lab/xdt/proto/downXDT v0.0.0-20210626072757-1a825541e8a8
-	github.com/ease-lab/xdt/proto/fnInvocation => github.com/ease-lab/xdt/proto/fnInvocation v0.0.0-20210626072757-1a825541e8a8
-	github.com/ease-lab/xdt/proto/upXDT => github.com/ease-lab/xdt/proto/upXDT v0.0.0-20210626072757-1a825541e8a8
-	github.com/ease-lab/xdt/sQP => github.com/ease-lab/xdt/sQP v0.0.0-20210626072757-1a825541e8a8
-	github.com/ease-lab/xdt/transport => github.com/ease-lab/xdt/transport v0.0.0-20210626072757-1a825541e8a8
-	github.com/ease-lab/xdt/utils => github.com/ease-lab/xdt/utils v0.0.0-20210626072757-1a825541e8a8
+	github.com/ease-lab/vhive-xdt/proto/crossXDT => github.com/ease-lab/vhive-xdt/proto/crossXDT v0.0.0-20210702045914-2b5f3eb7cb08
+	github.com/ease-lab/vhive-xdt/proto/downXDT => github.com/ease-lab/vhive-xdt/proto/downXDT v0.0.0-20210702045914-2b5f3eb7cb08
+	github.com/ease-lab/vhive-xdt/proto/upXDT => github.com/ease-lab/vhive-xdt/proto/upXDT v0.0.0-20210702045914-2b5f3eb7cb08
+	github.com/ease-lab/vhive-xdt/queue-proxy/dQP => github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-20210702045914-2b5f3eb7cb08
+	github.com/ease-lab/vhive-xdt/queue-proxy/sQP => github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-20210702045914-2b5f3eb7cb08
+	github.com/ease-lab/vhive-xdt/transport => github.com/ease-lab/vhive-xdt/transport v0.0.0-20210702045914-2b5f3eb7cb08
+	github.com/ease-lab/vhive-xdt/utils => github.com/ease-lab/vhive-xdt/utils v0.0.0-20210702045914-2b5f3eb7cb08
 )
 
 require (
@@ -24,9 +23,9 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/cli v20.10.2+incompatible // indirect
 	github.com/docker/docker v20.10.2+incompatible // indirect
-	github.com/ease-lab/xdt/dQP v0.0.0-00010101000000-000000000000
-	github.com/ease-lab/xdt/sQP v0.0.0-00010101000000-000000000000
-	github.com/ease-lab/xdt/utils v0.0.0-00010101000000-000000000000
+	github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-00010101000000-000000000000
+	github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-00010101000000-000000000000
+	github.com/ease-lab/vhive-xdt/utils v0.0.0-00010101000000-000000000000
 	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
 	github.com/go-openapi/spec v0.20.2 // indirect
 	github.com/gogo/protobuf v1.3.2
@@ -41,6 +40,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/prometheus/client_golang v1.10.0
 	github.com/prometheus/client_model v0.2.0
+	github.com/prometheus/common v0.20.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/tsenart/vegeta/v12 v12.8.4
 	go.opencensus.io v0.23.0

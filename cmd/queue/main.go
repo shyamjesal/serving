@@ -38,9 +38,9 @@ import (
 
 	"k8s.io/apimachinery/pkg/types"
 
-	"github.com/ease-lab/xdt/dQP"
-	"github.com/ease-lab/xdt/sQP"
-	XDTUtils "github.com/ease-lab/xdt/utils"
+	"github.com/ease-lab/vhive-xdt/queue-proxy/dQP"
+	"github.com/ease-lab/vhive-xdt/queue-proxy/sQP"
+	XDTUtils "github.com/ease-lab/vhive-xdt/utils"
 	network "knative.dev/networking/pkg"
 	pkglogging "knative.dev/pkg/logging"
 	"knative.dev/pkg/logging/logkey"
