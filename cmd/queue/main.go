@@ -27,6 +27,8 @@ import (
 	"strconv"
 	"time"
 
+	"google.golang.org/grpc/metadata"
+
 	"github.com/prometheus/common/log"
 
 	"github.com/sirupsen/logrus"
@@ -181,7 +183,7 @@ func main() {
 	probe := buildProbe(logger, env)
 	healthState := health.NewState()
 
-	XDTconfig := XDTUtils.LoadConfig
+	XDTconfig := XDTUtils.ReadConfig()
 	mainServer := buildServer(ctx, env, healthState, probe, stats, logger, XDTconfig)
 	servers := map[string]*http.Server{
 		"main":    mainServer,
@@ -320,11 +322,19 @@ func buildServer(ctx context.Context, env config, healthState *health.State, rp 
 			defer h.ServeHTTP(w, r)
 
 			if r.Header.Get("is_xdt") == "true" {
+				httpMetadata := map[string]string{
+					"is_xdt":   r.Header.Get("is_xdt"),
+					"key":      r.Header.Get("key"),
+					"sqp_addr": r.Header.Get("sqp_addr"),
+					"routing":  r.Header.Get("routing"),
+				}
+				ctx := metadata.NewOutgoingContext(r.Context(), metadata.New(httpMetadata))
 				log.Infof("pulling from sQP using key %s addr %s", r.Header.Get("key"), r.Header.Get("sqp_addr"))
 				go func() {
-					err := dQP.PullDataFromSrcQP(r.Context(), r.Header.Get("key"), r.Header.Get("sqp_addr"), XDTconfig.ChunkSizeInBytes)
+					// FIXME: support many payloads per invocation
+					err := dQP.PullDataFromSrcQP(ctx)
 					if err != nil {
-						logger.Errorf("unable to pull data from SQP: %v", err)
+						log.Fatalf("Proxy: Failed to pull data from sQP: %v", err)
 					}
 				}()
 			}

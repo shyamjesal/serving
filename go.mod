@@ -3,13 +3,13 @@ module knative.dev/serving
 go 1.15
 
 replace (
-	github.com/ease-lab/vhive-xdt/proto/crossXDT => github.com/ease-lab/vhive-xdt/proto/crossXDT v0.0.0-20210702045914-2b5f3eb7cb08
-	github.com/ease-lab/vhive-xdt/proto/downXDT => github.com/ease-lab/vhive-xdt/proto/downXDT v0.0.0-20210702045914-2b5f3eb7cb08
-	github.com/ease-lab/vhive-xdt/proto/upXDT => github.com/ease-lab/vhive-xdt/proto/upXDT v0.0.0-20210702045914-2b5f3eb7cb08
-	github.com/ease-lab/vhive-xdt/queue-proxy/dQP => github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-20210702045914-2b5f3eb7cb08
-	github.com/ease-lab/vhive-xdt/queue-proxy/sQP => github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-20210702045914-2b5f3eb7cb08
-	github.com/ease-lab/vhive-xdt/transport => github.com/ease-lab/vhive-xdt/transport v0.0.0-20210702045914-2b5f3eb7cb08
-	github.com/ease-lab/vhive-xdt/utils => github.com/ease-lab/vhive-xdt/utils v0.0.0-20210702045914-2b5f3eb7cb08
+	github.com/ease-lab/vhive-xdt/proto/crossXDT => github.com/ease-lab/vhive-xdt/proto/crossXDT v0.0.0-20210708063427-d4a5f46a0ea3
+	github.com/ease-lab/vhive-xdt/proto/downXDT => github.com/ease-lab/vhive-xdt/proto/downXDT v0.0.0-20210708063427-d4a5f46a0ea3
+	github.com/ease-lab/vhive-xdt/proto/upXDT => github.com/ease-lab/vhive-xdt/proto/upXDT v0.0.0-20210708063427-d4a5f46a0ea3
+	github.com/ease-lab/vhive-xdt/queue-proxy/dQP => github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-20210708063427-d4a5f46a0ea3
+	github.com/ease-lab/vhive-xdt/queue-proxy/sQP => github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-20210708063427-d4a5f46a0ea3
+	github.com/ease-lab/vhive-xdt/transport => github.com/ease-lab/vhive-xdt/transport v0.0.0-20210708063427-d4a5f46a0ea3
+	github.com/ease-lab/vhive-xdt/utils => github.com/ease-lab/vhive-xdt/utils v0.0.0-20210708063427-d4a5f46a0ea3
 )
 
 require (
