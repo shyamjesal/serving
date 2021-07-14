@@ -43,6 +43,8 @@ import (
 	"github.com/ease-lab/vhive-xdt/queue-proxy/dQP"
 	"github.com/ease-lab/vhive-xdt/queue-proxy/sQP"
 	XDTUtils "github.com/ease-lab/vhive-xdt/utils"
+	XDTtracing "github.com/ease-lab/vhive/utils/tracing/go"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	network "knative.dev/networking/pkg"
 	pkglogging "knative.dev/pkg/logging"
 	"knative.dev/pkg/logging/logkey"
@@ -184,6 +186,14 @@ func main() {
 	healthState := health.NewState()
 
 	XDTconfig := XDTUtils.ReadConfig()
+	if XDTconfig.TracingEnabled {
+		shutdown, err := XDTtracing.InitBasicTracer(XDTconfig.ZipkinEndpoint, "QP")
+		if err != nil {
+			log.Warn(err)
+		}
+		defer shutdown()
+	}
+
 	mainServer := buildServer(ctx, env, healthState, probe, stats, logger, XDTconfig)
 	servers := map[string]*http.Server{
 		"main":    mainServer,
@@ -341,6 +351,11 @@ func buildServer(ctx context.Context, env config, healthState *health.State, rp 
 
 		})
 	}(composedHandler, logger)
+
+	if XDTconfig.TracingEnabled {
+		composedHandler = otelhttp.NewHandler(composedHandler, "HTTPProxy")
+	}
+
 	if metricsSupported {
 		composedHandler = requestAppMetricsHandler(logger, composedHandler, breaker, env)
 	}

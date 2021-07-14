@@ -3,13 +3,15 @@ module knative.dev/serving
 go 1.15
 
 replace (
-	github.com/ease-lab/vhive-xdt/proto/crossXDT => github.com/ease-lab/vhive-xdt/proto/crossXDT v0.0.0-20210708063427-d4a5f46a0ea3
-	github.com/ease-lab/vhive-xdt/proto/downXDT => github.com/ease-lab/vhive-xdt/proto/downXDT v0.0.0-20210708063427-d4a5f46a0ea3
-	github.com/ease-lab/vhive-xdt/proto/upXDT => github.com/ease-lab/vhive-xdt/proto/upXDT v0.0.0-20210708063427-d4a5f46a0ea3
-	github.com/ease-lab/vhive-xdt/queue-proxy/dQP => github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-20210708063427-d4a5f46a0ea3
-	github.com/ease-lab/vhive-xdt/queue-proxy/sQP => github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-20210708063427-d4a5f46a0ea3
-	github.com/ease-lab/vhive-xdt/transport => github.com/ease-lab/vhive-xdt/transport v0.0.0-20210708063427-d4a5f46a0ea3
-	github.com/ease-lab/vhive-xdt/utils => github.com/ease-lab/vhive-xdt/utils v0.0.0-20210708063427-d4a5f46a0ea3
+	github.com/ease-lab/vhive-xdt/proto/crossXDT => github.com/ease-lab/vhive-xdt/proto/crossXDT v0.0.0-20210714065930-65085ef48f85
+	github.com/ease-lab/vhive-xdt/proto/downXDT => github.com/ease-lab/vhive-xdt/proto/downXDT v0.0.0-20210714065930-65085ef48f85
+	github.com/ease-lab/vhive-xdt/proto/upXDT => github.com/ease-lab/vhive-xdt/proto/upXDT v0.0.0-20210714065930-65085ef48f85
+	github.com/ease-lab/vhive-xdt/queue-proxy/dQP => github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-20210714065930-65085ef48f85
+	github.com/ease-lab/vhive-xdt/queue-proxy/sQP => github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-20210714065930-65085ef48f85
+	github.com/ease-lab/vhive-xdt/transport => github.com/ease-lab/vhive-xdt/transport v0.0.0-20210714065930-65085ef48f85
+	github.com/ease-lab/vhive-xdt/utils => github.com/ease-lab/vhive-xdt/utils v0.0.0-20210714065930-65085ef48f85
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.20.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp => go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.20.0
 )
 
 require (
@@ -26,6 +28,7 @@ require (
 	github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-00010101000000-000000000000
 	github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-00010101000000-000000000000
 	github.com/ease-lab/vhive-xdt/utils v0.0.0-00010101000000-000000000000
+	github.com/ease-lab/vhive/utils/tracing/go v0.0.0-20210708110826-fffc98ca29d6
 	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
 	github.com/go-openapi/spec v0.20.2 // indirect
 	github.com/gogo/protobuf v1.3.2
@@ -44,7 +47,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/tsenart/vegeta/v12 v12.8.4
 	go.opencensus.io v0.23.0
-	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.21.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.0.0-00010101000000-000000000000
 	go.uber.org/atomic v1.7.0
 	go.uber.org/automaxprocs v1.4.0
 	go.uber.org/goleak v1.1.10
@@ -58,11 +61,11 @@ require (
 	gonum.org/v1/netlib v0.0.0-20190331212654-76723241ea4e // indirect
 	google.golang.org/api v0.36.0
 	google.golang.org/genproto v0.0.0-20210624195500-8bfb893ecb84 // indirect
-	google.golang.org/grpc v1.38.0
+	google.golang.org/grpc v1.39.0
 	google.golang.org/protobuf v1.27.0 // indirect
-	k8s.io/api v0.19.7
-	k8s.io/apimachinery v0.19.7
-	k8s.io/client-go v0.19.7
+	k8s.io/api v0.20.6
+	k8s.io/apimachinery v0.20.6
+	k8s.io/client-go v0.20.6
 	k8s.io/code-generator v0.19.7
 	k8s.io/gengo v0.0.0-20201214224949-b6c5ce23f027 // indirect
 	k8s.io/kube-openapi v0.0.0-20210113233702-8566a335510f
