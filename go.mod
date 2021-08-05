@@ -3,13 +3,13 @@ module knative.dev/serving
 go 1.15
 
 replace (
-	github.com/ease-lab/vhive-xdt/proto/crossXDT => github.com/ease-lab/vhive-xdt/proto/crossXDT v0.0.0-20210802104004-26f720de0dcd
-	github.com/ease-lab/vhive-xdt/proto/downXDT => github.com/ease-lab/vhive-xdt/proto/downXDT v0.0.0-20210802104004-26f720de0dcd
-	github.com/ease-lab/vhive-xdt/proto/upXDT => github.com/ease-lab/vhive-xdt/proto/upXDT v0.0.0-20210802104004-26f720de0dcd
-	github.com/ease-lab/vhive-xdt/queue-proxy/dQP => github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-20210802104004-26f720de0dcd
-	github.com/ease-lab/vhive-xdt/queue-proxy/sQP => github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-20210802104004-26f720de0dcd
-	github.com/ease-lab/vhive-xdt/transport => github.com/ease-lab/vhive-xdt/transport v0.0.0-20210802104004-26f720de0dcd
-	github.com/ease-lab/vhive-xdt/utils => github.com/ease-lab/vhive-xdt/utils v0.0.0-20210802104004-26f720de0dcd
+	github.com/ease-lab/vhive-xdt/proto/crossXDT => github.com/ease-lab/vhive-xdt/proto/crossXDT v0.0.0-20210805164202-0146a9ff614c
+	github.com/ease-lab/vhive-xdt/proto/downXDT => github.com/ease-lab/vhive-xdt/proto/downXDT v0.0.0-20210805164202-0146a9ff614c
+	github.com/ease-lab/vhive-xdt/proto/upXDT => github.com/ease-lab/vhive-xdt/proto/upXDT v0.0.0-20210805164202-0146a9ff614c
+	github.com/ease-lab/vhive-xdt/queue-proxy/dQP => github.com/ease-lab/vhive-xdt/queue-proxy/dQP v0.0.0-20210805164202-0146a9ff614c
+	github.com/ease-lab/vhive-xdt/queue-proxy/sQP => github.com/ease-lab/vhive-xdt/queue-proxy/sQP v0.0.0-20210805164202-0146a9ff614c
+	github.com/ease-lab/vhive-xdt/transport => github.com/ease-lab/vhive-xdt/transport v0.0.0-20210805164202-0146a9ff614c
+	github.com/ease-lab/vhive-xdt/utils => github.com/ease-lab/vhive-xdt/utils v0.0.0-20210805164202-0146a9ff614c
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.20.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp => go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.20.0
 )

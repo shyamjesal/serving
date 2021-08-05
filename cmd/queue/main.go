@@ -186,6 +186,7 @@ func main() {
 	healthState := health.NewState()
 
 	XDTconfig := XDTUtils.ReadConfig()
+	log.Infof("using XDT config %v", XDTconfig)
 	if XDTconfig.TracingEnabled {
 		shutdown, err := XDTtracing.InitBasicTracer(XDTconfig.ZipkinEndpoint, "QP")
 		if err != nil {
