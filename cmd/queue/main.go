@@ -27,6 +27,12 @@ import (
 	"strconv"
 	"time"
 
+	"google.golang.org/grpc/metadata"
+
+	"github.com/prometheus/common/log"
+
+	"github.com/sirupsen/logrus"
+
 	"github.com/kelseyhightower/envconfig"
 	"go.opencensus.io/plugin/ochttp"
 	"go.uber.org/automaxprocs/maxprocs"
@@ -34,6 +40,11 @@ import (
 
 	"k8s.io/apimachinery/pkg/types"
 
+	"github.com/ease-lab/vhive-xdt/queue-proxy/dQP"
+	"github.com/ease-lab/vhive-xdt/queue-proxy/sQP"
+	XDTUtils "github.com/ease-lab/vhive-xdt/utils"
+	XDTtracing "github.com/ease-lab/vhive/utils/tracing/go"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	network "knative.dev/networking/pkg"
 	pkglogging "knative.dev/pkg/logging"
 	"knative.dev/pkg/logging/logkey"
@@ -174,7 +185,17 @@ func main() {
 	probe := buildProbe(logger, env)
 	healthState := health.NewState()
 
-	mainServer := buildServer(ctx, env, healthState, probe, stats, logger)
+	XDTconfig := XDTUtils.ReadConfig()
+	log.Infof("using XDT config %v", XDTconfig)
+	if XDTconfig.TracingEnabled {
+		shutdown, err := XDTtracing.InitBasicTracer(XDTconfig.ZipkinEndpoint, "QP")
+		if err != nil {
+			log.Warn(err)
+		}
+		defer shutdown()
+	}
+
+	mainServer := buildServer(ctx, env, healthState, probe, stats, logger, XDTconfig)
 	servers := map[string]*http.Server{
 		"main":    mainServer,
 		"admin":   buildAdminServer(logger, healthState),
@@ -225,6 +246,18 @@ func main() {
 		}
 	}()
 
+	logrus.SetLevel(logrus.InfoLevel)
+	// TimestampFormat RFC3339NanoFixed is time.RFC3339Nano with nanoseconds padded using zeros to
+	// ensure the formatted time is always the same number of characters.
+	logrus.SetFormatter(&logrus.TextFormatter{
+		TimestampFormat: "2006-01-02T15:04:05.000000000Z07:00",
+		FullTimestamp:   true,
+		ForceColors:     true})
+
+	// start sQP and dQP servers
+	go sQP.StartServer(XDTconfig)
+	go dQP.StartServer(XDTconfig)
+
 	// Blocks until we actually receive a TERM signal or one of the servers
 	// exits unexpectedly. We fold both signals together because we only want
 	// to act on the first of those to reach here.
@@ -272,7 +305,7 @@ func buildProbe(logger *zap.SugaredLogger, env config) *readiness.Probe {
 }
 
 func buildServer(ctx context.Context, env config, healthState *health.State, rp *readiness.Probe, stats *network.RequestStats,
-	logger *zap.SugaredLogger) *http.Server {
+	logger *zap.SugaredLogger, XDTconfig XDTUtils.Config) *http.Server {
 
 	maxIdleConns := 1000 // TODO: somewhat arbitrary value for CC=0, needs experimental validation.
 	if env.ContainerConcurrency > 0 {
@@ -295,6 +328,35 @@ func buildServer(ctx context.Context, env config, healthState *health.State, rp 
 	// Create queue handler chain.
 	// Note: innermost handlers are specified first, ie. the last handler in the chain will be executed first.
 	var composedHandler http.Handler = httpProxy
+	composedHandler = func(h http.Handler, logger *zap.SugaredLogger) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer h.ServeHTTP(w, r)
+
+			if r.Header.Get("is_xdt") == "true" {
+				httpMetadata := map[string]string{
+					"is_xdt":   r.Header.Get("is_xdt"),
+					"key":      r.Header.Get("key"),
+					"sqp_addr": r.Header.Get("sqp_addr"),
+					"routing":  r.Header.Get("routing"),
+				}
+				ctx := metadata.NewOutgoingContext(r.Context(), metadata.New(httpMetadata))
+				log.Infof("pulling from sQP using key %s addr %s", r.Header.Get("key"), r.Header.Get("sqp_addr"))
+				go func() {
+					// FIXME: support many payloads per invocation
+					err := dQP.PullDataFromSrcQP(ctx)
+					if err != nil {
+						log.Fatalf("Proxy: Failed to pull data from sQP: %v", err)
+					}
+				}()
+			}
+
+		})
+	}(composedHandler, logger)
+
+	if XDTconfig.TracingEnabled {
+		composedHandler = otelhttp.NewHandler(composedHandler, "HTTPProxy")
+	}
+
 	if metricsSupported {
 		composedHandler = requestAppMetricsHandler(logger, composedHandler, breaker, env)
 	}
