@@ -20,6 +20,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/metadata"
 	"net"
 	"net/http"
 	"os"
@@ -33,6 +35,11 @@ import (
 
 	"k8s.io/apimachinery/pkg/types"
 
+	"github.com/ease-lab/vhive-xdt/queue-proxy/dQP"
+	"github.com/ease-lab/vhive-xdt/queue-proxy/sQP"
+	XDTUtils "github.com/ease-lab/vhive-xdt/utils"
+	XDTtracing "github.com/vhive-serverless/vSwarm/utils/tracing/go"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	network "knative.dev/networking/pkg"
 	pkglogging "knative.dev/pkg/logging"
 	"knative.dev/pkg/logging/logkey"
@@ -173,7 +180,17 @@ func main() {
 	// Enable TLS when certificate is mounted.
 	tlsEnabled := exists(logger, certPath) && exists(logger, keyPath)
 
-	mainServer, drain := buildServer(ctx, env, probe, stats, logger, concurrencyendpoint, false)
+	XDTconfig := XDTUtils.ReadConfig()
+	logrus.Infof("using XDT config %v", XDTconfig)
+	if XDTconfig.TracingEnabled {
+		shutdown, err := XDTtracing.InitBasicTracer(XDTconfig.ZipkinEndpoint, "QP")
+		if err != nil {
+			logrus.Warn(err)
+		}
+		defer shutdown()
+	}
+
+	mainServer, drain := buildServer(ctx, env, probe, stats, logger, concurrencyendpoint, XDTconfig, false)
 	httpServers := map[string]*http.Server{
 		"main":    mainServer,
 		"metrics": buildMetricsServer(promStatReporter, protoStatReporter),
@@ -188,7 +205,7 @@ func main() {
 	// See also https://github.com/knative/serving/issues/12808.
 	var tlsServers map[string]*http.Server
 	if tlsEnabled {
-		mainTLSServer, drain := buildServer(ctx, env, probe, stats, logger, concurrencyendpoint, true /* enable TLS */)
+		mainTLSServer, drain := buildServer(ctx, env, probe, stats, logger, concurrencyendpoint, XDTconfig, true /* enable TLS */)
 		tlsServers = map[string]*http.Server{
 			"tlsMain":  mainTLSServer,
 			"tlsAdmin": buildAdminServer(logger, drain),
@@ -215,6 +232,18 @@ func main() {
 			}
 		}(name, server)
 	}
+
+	logrus.SetLevel(logrus.InfoLevel)
+	// TimestampFormat RFC3339NanoFixed is time.RFC3339Nano with nanoseconds padded using zeros to
+	// ensure the formatted time is always the same number of characters.
+	logrus.SetFormatter(&logrus.TextFormatter{
+		TimestampFormat: "2006-01-02T15:04:05.000000000Z07:00",
+		FullTimestamp:   true,
+		ForceColors:     true})
+
+	// start sQP and dQP servers
+	go sQP.StartServer(XDTconfig)
+	go dQP.StartServer(XDTconfig)
 
 	// Blocks until we actually receive a TERM signal or one of the servers
 	// exits unexpectedly. We fold both signals together because we only want
@@ -266,7 +295,7 @@ func buildProbe(logger *zap.SugaredLogger, encodedProbe string, autodetectHTTP2 
 }
 
 func buildServer(ctx context.Context, env config, probeContainer func() bool, stats *network.RequestStats, logger *zap.SugaredLogger,
-	ce *queue.ConcurrencyEndpoint, enableTLS bool) (server *http.Server, drain func()) {
+	ce *queue.ConcurrencyEndpoint, XDTconfig XDTUtils.Config, enableTLS bool) (server *http.Server, drain func()) {
 	// TODO: If TLS is enabled, execute probes twice and tracking two different sets of container health.
 
 	target := net.JoinHostPort("127.0.0.1", env.UserPort)
@@ -291,6 +320,34 @@ func buildServer(ctx context.Context, env config, probeContainer func() bool, st
 	// Create queue handler chain.
 	// Note: innermost handlers are specified first, ie. the last handler in the chain will be executed first.
 	var composedHandler http.Handler = httpProxy
+	composedHandler = func(h http.Handler, logger *zap.SugaredLogger) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer h.ServeHTTP(w, r)
+
+			if r.Header.Get("is_xdt") == "true" {
+				httpMetadata := map[string]string{
+					"is_xdt":   r.Header.Get("is_xdt"),
+					"key":      r.Header.Get("key"),
+					"sqp_addr": r.Header.Get("sqp_addr"),
+					"routing":  r.Header.Get("routing"),
+				}
+				ctx := metadata.NewOutgoingContext(r.Context(), metadata.New(httpMetadata))
+				logrus.Infof("pulling from sQP using key %s addr %s", r.Header.Get("key"), r.Header.Get("sqp_addr"))
+				go func() {
+					// FIXME: support many payloads per invocation
+					err := dQP.PullDataFromSrcQP(ctx)
+					if err != nil {
+						logrus.Fatalf("Proxy: Failed to pull data from sQP: %v", err)
+					}
+				}()
+			}
+
+		})
+	}(composedHandler, logger)
+
+	if XDTconfig.TracingEnabled {
+		composedHandler = otelhttp.NewHandler(composedHandler, "HTTPProxy")
+	}
 	if concurrencyStateEnabled {
 		logger.Info("Concurrency state endpoint set, tracking request counts, using endpoint: ", ce.Endpoint())
 		go func() {
@@ -302,6 +359,7 @@ func buildServer(ctx context.Context, env config, probeContainer func() bool, st
 		// start paused
 		ce.Pause(logger)
 	}
+
 	if metricsSupported {
 		composedHandler = requestAppMetricsHandler(logger, composedHandler, breaker, env)
 	}
